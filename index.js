@@ -86,6 +86,23 @@ app.post('/api/persons', (req, res) => {
     res.json(person)
 })
 
+app.put('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const body =req.body
+    const person = persons.find(person => person.id === id)
+
+    if (!body.number) {
+        return res.status(400).json({
+            error: 'number missing'
+        })
+    }
+
+    const changedPerson = {...person, number: body.number}
+    persons = persons.map(person => person.id === id ? person : changedPerson)
+
+    res.json(changedPerson)
+})
+
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
